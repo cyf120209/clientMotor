@@ -51,7 +51,6 @@ public class MyLocalDevice {
 
     private static MasterNode node;
     private static Transport transport;
-    private static LocalDevice ipLocalDevice;
     public static RemoteUtils mRemoteUtils;
 
     public static LocalDevice getInstance(){
@@ -107,10 +106,8 @@ public class MyLocalDevice {
         try {
             localDevice.initialize();
             Thread.sleep(1000);
-            ipLocalDevice.initialize();
-            Thread.sleep(1000);
             localDevice.sendGlobalBroadcast(localDevice.getIAm());
-//            Thread.sleep(100);
+            Thread.sleep(100);
             localDevice.sendGlobalBroadcast(new WhoIsRequest());
         } catch (BACnetException e) {
             e.printStackTrace();
