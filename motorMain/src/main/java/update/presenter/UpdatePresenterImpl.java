@@ -189,9 +189,9 @@ public class UpdatePresenterImpl implements UpdatePresenter {
             int startAddress = (int) (tmp[6] & 0xff) * 256 + (int) (tmp[5] & 0xff);
 
             if(Public.matchString(firmWareInformation1.getType(),"MC-AC-EX-")){
-                if (startAddress < 0x4080) {
+                if (startAddress < 0x4100) {
                     firmWareInformation1.setTypeNum(0);
-                } else if (startAddress < 0x4380) {
+                } else if (startAddress < 0x4400) {
                     firmWareInformation1.setTypeNum(1);
                 } else {
                     firmWareInformation1.setTypeNum(2);
@@ -205,6 +205,7 @@ public class UpdatePresenterImpl implements UpdatePresenter {
                     firmWareInformation1.setTypeNum(2);
                 }
             }
+            mUpdateView.updateVersionAndType(firmWareInformation1);
             if (tmp[1] == 122 && tmp[3] == 0 && tmp[4] == 32) {
                 return true;
             }
@@ -446,6 +447,7 @@ public class UpdatePresenterImpl implements UpdatePresenter {
     private void initUpdate() {
         flag = 1;
         count = 0;
+        isCancel=false;
         mAbnormalRemoteDevice.clear();
         versionType = Common.DEVICE_VERSION_SAME;
         originDeviceFlag = Common.DEVICE_FOUNDING;
