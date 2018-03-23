@@ -52,7 +52,7 @@ public class BoxLayoutCase extends JFrame implements ActionListener,BoxLayoutVie
 
     public BoxLayoutCase() throws HeadlessException {
         mBoxLayoutCasePresenter = new BoxLayoutCasePresenterImpl(this);
-        setTitle("BoxLayout");
+        setTitle("Draper");
         setSize(WIDTH,HEIGHT);
 
         setLocationRelativeTo(null);
@@ -89,7 +89,7 @@ public class BoxLayoutCase extends JFrame implements ActionListener,BoxLayoutVie
         downbt.setBounds(new Rectangle(210, 170, 100, Common.HEIGHT));
         stopButton.setBounds(new Rectangle(210, 150, 100, Common.HEIGHT));
 
-        devBox.setBounds(10,100,300,Common.HEIGHT);
+        devBox.setBounds(10,100,450,Common.HEIGHT);
 
         versionLabel.setBounds(10,130,200,Common.HEIGHT);
         draperID.setBounds(10,150,200,Common.HEIGHT);

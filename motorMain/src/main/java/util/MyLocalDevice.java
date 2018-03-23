@@ -7,6 +7,7 @@ import com.serotonin.bacnet4j.npdu.ip.IpNetwork;
 import com.serotonin.bacnet4j.npdu.mstp.Frame;
 import com.serotonin.bacnet4j.npdu.mstp.MasterNode;
 import com.serotonin.bacnet4j.npdu.mstp.MstpNetwork;
+import com.serotonin.bacnet4j.npdu.mstp.ReceivedFrameListener;
 import com.serotonin.bacnet4j.service.VendorServiceKey;
 import com.serotonin.bacnet4j.service.acknowledgement.ConfirmedPrivateTransferAck;
 import com.serotonin.bacnet4j.service.confirmed.ConfirmedPrivateTransferRequest;
@@ -63,7 +64,7 @@ public class MyLocalDevice {
                 if(localDevice==null){
                     serialParams.setCommPortId(prot);
                     serialParams.setBaudRate(Common.BAUDRATE);
-                    node = new MasterNode(serialParams, (byte) 2,2);
+                    node = new MasterNode(serialParams, (byte) 6,2);
                     network = new MstpNetwork(node);
                     transport = new Transport(network);
 //                    IpNetwork network = new IpNetwork("192.168.20.63");
