@@ -15,7 +15,7 @@ import com.serotonin.bacnet4j.type.primitive.OctetString;
 import com.serotonin.bacnet4j.type.primitive.Primitive;
 import com.serotonin.bacnet4j.type.primitive.UnsignedInteger;
 import common.Common;
-import listener.UpdateListener;
+import listener.UpgradeListener;
 import model.FirmWareInformation;
 import util.MyLocalDevice;
 import update.view.UpdateView;
@@ -42,7 +42,7 @@ public class UpdatePresenterImpl implements UpdatePresenter {
 
     private final List<RemoteDevice> mRemoteDevices;
     private final Map<Integer, RemoteDevice> mRemoteDeviceMap;
-    private UpdateListener updateListener;
+    private UpgradeListener updateListener;
     private UpdateView mUpdateView;
     private File framefile;
     private File framefile1;
@@ -112,7 +112,7 @@ public class UpdatePresenterImpl implements UpdatePresenter {
         mRemoteDevices = localDevice.getRemoteDevices();
         mRemoteDeviceMap = MyLocalDevice.getRemoteDeviceMap();
         mUpdateView.updateDevBox(mRemoteDevices);
-        updateListener = new UpdateListener(localDevice, this, mUpdateView);
+//        updateListener = new UpdateListener( this);
     }
 
     /**
@@ -139,7 +139,6 @@ public class UpdatePresenterImpl implements UpdatePresenter {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(framefile1.lastModified());
             String s = sdf.format(cal.getTime());
-            mUpdateView.updateLastModify(s);
         }
     }
 
@@ -152,11 +151,11 @@ public class UpdatePresenterImpl implements UpdatePresenter {
         int returnVal = fDialog.showOpenDialog(null);
         //打印出文件的路径，你可以修改位 把路径值 写到 textField 中
         if (JFileChooser.APPROVE_OPTION == returnVal) {
-            try {
-                mUpdateView.updateFileText2(fDialog.getSelectedFile().getCanonicalPath());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+//            try {
+//                mUpdateView.updateFileText2(fDialog.getSelectedFile().getCanonicalPath());
+//            } catch (IOException e1) {
+//                e1.printStackTrace();
+//            }
             framefile2 = fDialog.getSelectedFile();
             CheckFileType2(framefile2);
             ReadFileTobuff2(framefile2);
@@ -386,7 +385,7 @@ public class UpdatePresenterImpl implements UpdatePresenter {
             mUpdateView.showBeforeDeviceVersion(device.getInstanceNumber() + "--" + version);
         } else {
             count++;
-            mUpdateView.showUpgradeInformation("found device：" + device.getInstanceNumber() + "    " + count + "/" + mUpdateView.getOriginalSize());
+//            mUpdateView.showUpgradeInformation("found device：" + device.getInstanceNumber() + "    " + count + "/" + mUpdateView.getOriginalSize());
             mUpdateView.showBeforeDeviceVersion(device.getInstanceNumber() + "--" + version);
         }
     }
@@ -400,7 +399,7 @@ public class UpdatePresenterImpl implements UpdatePresenter {
         } else {
             count++;
             String version = Public.readVersion(device);
-            mUpdateView.showUpgradeInformation("found device：" + device.getInstanceNumber() + "    " + count + "/" + mUpdateView.getOriginalSize());
+//            mUpdateView.showUpgradeInformation("found device：" + device.getInstanceNumber() + "    " + count + "/" + mUpdateView.getOriginalSize());
             mUpdateView.showAfterDeviceVersion(device.getInstanceNumber() + "--" + version);
         }
     }
@@ -475,7 +474,7 @@ public class UpdatePresenterImpl implements UpdatePresenter {
             flag = 2;
             count = 0;
             isSendCompleted = false;
-            mUpdateView.updateProgress(0);
+//            mUpdateView.updateProgress(0);
             mUpdateView.showUpgradeInformation(Common.STEP_2_START);
             new Thread(new UpdatePresenterImpl.RunUpdateToOne(framefile, localDevice, (mUpdateView.getdevBoxSelectedItem()))).start();
 
@@ -544,12 +543,12 @@ public class UpdatePresenterImpl implements UpdatePresenter {
                     mUpdateView.showUpgradeInformation("upgrade cancel");
                     return;
                 }
-                if(mUpdateView.getBeforeSize()==getAbnormalRemoteDeviceSize()){
-                    mUpdateView.showConfirmDialog("All firmware is the latest ,update finish!");
-                    isSendCompleted = true;
-                    mUpdateView.updateFinish();
-                    return;
-                }
+//                if(mUpdateView.getBeforeSize()==getAbnormalRemoteDeviceSize()){
+//                    mUpdateView.showConfirmDialog("All firmware is the latest ,update finish!");
+//                    isSendCompleted = true;
+//                    mUpdateView.updateFinish();
+//                    return;
+//                }
                 mUpdateView.showUpgradeInformation(Common.STEP_3_START);
                 mUpdateView.showUpgradeInformation("begin to upgrade");
                 FileInputStream fi = new FileInputStream(updateFile);
@@ -643,7 +642,7 @@ public class UpdatePresenterImpl implements UpdatePresenter {
             flag = 2;
             count = 0;
             isSendCompleted = false;
-            mUpdateView.updateProgress(0);
+//            mUpdateView.updateProgress(0);
             mUpdateView.showUpgradeInformation(Common.STEP_2_START);
             new Thread(new UpdatePresenterImpl.RunUpdate(framefile, localDevice)).start();
 
@@ -710,12 +709,12 @@ public class UpdatePresenterImpl implements UpdatePresenter {
                     mUpdateView.showUpgradeInformation("upgrade cancel");
                     return;
                 }
-                if(mUpdateView.getBeforeSize()==getAbnormalRemoteDeviceSize()){
-                    mUpdateView.showConfirmDialog("All firmware is the latest ,update finish!");
-                    isSendCompleted = true;
-                    mUpdateView.updateFinish();
-                    return;
-                }
+//                if(mUpdateView.getBeforeSize()==getAbnormalRemoteDeviceSize()){
+//                    mUpdateView.showConfirmDialog("All firmware is the latest ,update finish!");
+//                    isSendCompleted = true;
+//                    mUpdateView.updateFinish();
+//                    return;
+//                }
                 mUpdateView.showUpgradeInformation(Common.STEP_3_START);
                 mUpdateView.showUpgradeInformation("begin to upgrade");
                 FileInputStream fi = new FileInputStream(updateFile);
@@ -793,7 +792,7 @@ public class UpdatePresenterImpl implements UpdatePresenter {
                         t.stop();
                     }
 
-                    mUpdateView.updateProgress(percent);
+//                    mUpdateView.updateProgress(percent);
                     Timer t = (Timer) e.getSource();
                     // 如果进度条达到最大值重新开发计数
                     if (percent == 100) {

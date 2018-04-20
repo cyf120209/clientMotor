@@ -1,0 +1,62 @@
+package update.presenter;
+
+import com.serotonin.bacnet4j.RemoteDevice;
+import com.serotonin.bacnet4j.service.acknowledgement.AcknowledgementService;
+import com.serotonin.bacnet4j.type.Encodable;
+import com.serotonin.bacnet4j.type.constructed.Address;
+import com.serotonin.bacnet4j.type.primitive.UnsignedInteger;
+import model.FirmWareInformation;
+
+import java.io.File;
+import java.util.List;
+
+public interface IUpgrade {
+
+    public List<FirmWareInformation> chooseFirmware(String path);
+
+    List<FirmWareInformation> chooseFirmware(File file);
+
+    public void startUpdate();
+
+    public int getUpgradeProgress();
+
+    /**
+     * 电机升级的状态
+     * @return true：数据发送完， false：数据还在发送中
+     */
+    boolean getUpdateState();
+
+    /**
+     * 获取升级状态
+     * @return
+     */
+    int getFlag();
+
+    /**
+     * 获取固件type类型
+     * @return
+     */
+    String getFirmWareType();
+
+    /**
+     * 设备列表及版本显示
+     * @param device 设备列表
+     */
+    void addJListDevice(RemoteDevice device);
+
+    /**
+     * 找齐需要升级的所有设备
+     */
+    void findOriginDevice(int flag);
+
+    /**
+     * 升级失败回调
+     * @param vendorId
+     * @param serviceNumber
+     * @param serviceParameters
+     * @param address
+     * @return
+     */
+    AcknowledgementService privateTransferReceivedComplex(UnsignedInteger vendorId, UnsignedInteger serviceNumber, Encodable serviceParameters, Address address);
+
+}

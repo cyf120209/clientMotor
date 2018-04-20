@@ -1,9 +1,8 @@
 package update.presenter;
 
-import com.serotonin.bacnet4j.RemoteDevice;
 import com.serotonin.bacnet4j.exception.BACnetException;
 import com.serotonin.bacnet4j.service.unconfirmed.UnconfirmedRequestService;
-import listener.UpdateListener;
+import listener.UpgradeListener;
 import util.MyLocalDevice;
 
 /**
@@ -11,17 +10,17 @@ import util.MyLocalDevice;
  */
 public class SendSingle {
 
-    UpdateListener listener;
+    UpgradeListener listener;
     UpdatePresenter updatePresenter;
     boolean isReceived = false;
 
-    public SendSingle(UpdatePresenter updatePresenter, UpdateListener listener) {
+    public SendSingle(UpdatePresenter updatePresenter, UpgradeListener listener) {
         this.updatePresenter=updatePresenter;
         this.listener = listener;
     }
 
     public void send(final UnconfirmedRequestService serviceRequest) {
-        listener.setListener(new UpdateListener.ReceivedListener() {
+        listener.setListener(new UpgradeListener.ReceivedListener() {
             @Override
             public void received() {
                 isReceived = true;

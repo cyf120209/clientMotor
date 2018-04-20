@@ -12,8 +12,6 @@ public interface UpdateView {
 
     void updateFileText(String text);
 
-    void updateFileText2(String text);
-
     int getDelay();
 
     String getFileName();
@@ -29,12 +27,6 @@ public interface UpdateView {
     void updateVersionAndType(FirmWareInformation firmWareInformation);
 
     void showError(String str);
-
-    /**
-     * 更新进度
-     * @param per
-     */
-    void updateProgress(int per);
 
     /**
      * 获取版本号
@@ -60,28 +52,19 @@ public interface UpdateView {
     void showConfirmDialog(String str);
 
     /**
-     * 显示固件最后修改日期
-     * @param lastModify
-     */
-    void updateLastModify(String lastModify);
-
-    /**
-     * 升级的电机数量
-     * @return
-     */
-    int getOriginalSize();
-
-    /**
-     * 升级前的单机数量
-     * @return
-     */
-    int getBeforeSize();
-
-    /**
      * 更新升级信息
      * @param version
      */
     void showUpgradeInformation(String version);
 
     void updateFinish();
+
+    void onStart() ;
+
+    void onCancel();
+
+    void onFinish() ;
+
+    void onProgressChanged(Integer masterProgress,Integer slaveProgress);
+
 }

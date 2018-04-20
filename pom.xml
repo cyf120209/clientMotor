@@ -154,18 +154,12 @@
         <!--</dependency>-->
 
         <!-- https://mvnrepository.com/artifact/net.sf.json-lib/json-lib -->
-        <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-            <version>2.3</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/net.sf.json-lib/json-lib-ext-spring -->
         <!--<dependency>-->
             <!--<groupId>net.sf.json-lib</groupId>-->
-            <!--<artifactId>json-lib-ext-spring</artifactId>-->
-            <!--<version>1.0.2</version>-->
+            <!--<artifactId>json-lib</artifactId>-->
+            <!--<version>2.3</version>-->
         <!--</dependency>-->
+
 
     </dependencies>
 

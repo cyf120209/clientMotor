@@ -2,9 +2,7 @@ package update.presenter;
 
 import com.serotonin.bacnet4j.exception.BACnetException;
 import com.serotonin.bacnet4j.service.unconfirmed.UnconfirmedRequestService;
-import com.serotonin.bacnet4j.service.unconfirmed.WhoIsRequest;
-import listener.UpdateListener;
-import update.view.UpdateView;
+import listener.UpgradeListener;
 import util.MyLocalDevice;
 
 /**
@@ -12,17 +10,17 @@ import util.MyLocalDevice;
  */
 public class Send {
 
-    UpdateListener listener;
+    UpgradeListener listener;
     UpdatePresenter updatePresenter;
     boolean isReceived = false;
 
-    public Send(UpdatePresenter updatePresenter,UpdateListener listener) {
+    public Send(UpdatePresenter updatePresenter, UpgradeListener listener) {
         this.updatePresenter=updatePresenter;
         this.listener = listener;
     }
 
     public void send(final UnconfirmedRequestService serviceRequest) {
-        listener.setListener(new UpdateListener.ReceivedListener() {
+        listener.setListener(new UpgradeListener.ReceivedListener() {
             @Override
             public void received() {
                 isReceived = true;

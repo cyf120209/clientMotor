@@ -33,4 +33,7 @@ public class Common {
     public static final String STEP_3_START="step 3 start";
     public static final String STEP_3_END="step 3 finish";
 
+    public static final int UPGRADE_12=1;
+    public static final int UPGRADE_121=2;
+
 }
