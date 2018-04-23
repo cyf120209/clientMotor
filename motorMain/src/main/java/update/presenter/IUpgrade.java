@@ -6,13 +6,14 @@ import com.serotonin.bacnet4j.type.Encodable;
 import com.serotonin.bacnet4j.type.constructed.Address;
 import com.serotonin.bacnet4j.type.primitive.UnsignedInteger;
 import model.FirmWareInformation;
+import model.FirmWareResult;
 
 import java.io.File;
 import java.util.List;
 
 public interface IUpgrade {
 
-    public List<FirmWareInformation> chooseFirmware(String path);
+    public FirmWareResult chooseFirmware(String path);
 
     List<FirmWareInformation> chooseFirmware(File file);
 
@@ -37,6 +38,12 @@ public interface IUpgrade {
      * @return
      */
     String getFirmWareType();
+
+    /**
+     * 获取固件type类型
+     * @return
+     */
+    String getFirmWareModelName();
 
     /**
      * 设备列表及版本显示

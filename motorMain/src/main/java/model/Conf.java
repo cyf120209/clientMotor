@@ -6,7 +6,12 @@ public class Conf implements Serializable{
 
     private String modelName;
 
-    private FirmWareInformation firmWareInformation;
+    private FirmWareInformation firmWareInformation1;
+
+    private FirmWareInformation firmWareInformation2;
+
+    public Conf() {
+    }
 
     public String getModelName() {
         return modelName;
@@ -16,11 +21,19 @@ public class Conf implements Serializable{
         this.modelName = modelName;
     }
 
-    public FirmWareInformation getFirmWareInformation() {
-        return firmWareInformation;
+    public FirmWareInformation getFirmWareInformation1() {
+        return firmWareInformation1;
     }
 
-    public void setFirmWareInformation(FirmWareInformation firmWareInformation) {
-        this.firmWareInformation = firmWareInformation;
+    public void setFirmWareInformation1(FirmWareInformation firmWareInformation1) {
+        this.firmWareInformation1 = firmWareInformation1;
+    }
+
+    public FirmWareInformation getFirmWareInformation2() {
+        return firmWareInformation2;
+    }
+
+    public void setFirmWareInformation2(FirmWareInformation firmWareInformation2) {
+        this.firmWareInformation2 = firmWareInformation2;
     }
 }

@@ -78,43 +78,70 @@ public class UpgradeListener extends DeviceEventAdapter {
             if (mUpgrade.getFlag() == 3) {
                 try {
                     String reg = Public.getAllString(mUpgrade.getFirmWareType(), "[A-za-z0-9-/]");
-                    //墙面开关
-                    if (Public.matchString(reg, "^WS-")) {
-                        String substring = reg.substring(3);
-                        String[] split = substring.split("/");
-                        boolean match = false;
-                        for (int i = 0; i < split.length; i++) {
-                            if (Public.matchString(Public.readModelName(d), "WS-" + split[i])) {
-                                match = true;
-                                break;
-                            }
-                        }
-                        if (match) {
-                            isFound = true;
-                            mUpgrade.addJListDevice(d);
-                            MyLocalDevice.updateRemoteDevice(d);
-
-                        }
-                    } else {
-                        if (Public.matchString(Public.readModelName(d), reg)) {
-                            isFound = true;
-                            mUpgrade.addJListDevice(d);
-                            MyLocalDevice.updateRemoteDevice(d);
-//                            System.out.println("match: "+isFound);
-                            //mUpdateView.showUpgradeInformation(" ----------------send to jList");
+                    String firmWareModelName = mUpgrade.getFirmWareModelName();
+                    String[] modelNames = firmWareModelName.split(",");
+                    boolean match = false;
+                    for(int i=0;i<modelNames.length;i++){
+                        if (Public.matchString(Public.readModelName(d), modelNames[i])) {
+                            match = true;
+                            break;
                         }
                     }
+                    if (match) {
+                        isFound = true;
+                        mUpgrade.addJListDevice(d);
+                        MyLocalDevice.updateRemoteDevice(d);
+
+                    }
+//                    //墙面开关
+//                    if (Public.matchString(reg, "^WS-")) {
+//                        String substring = reg.substring(3);
+//                        String[] split = substring.split("/");
+////                        boolean match = false;
+////                        for (int i = 0; i < split.length; i++) {
+////                            if (Public.matchString(Public.readModelName(d), "WS-" + split[i])) {
+////                                match = true;
+////                                break;
+////                            }
+////                        }
+//                        if (match) {
+//                            isFound = true;
+//                            mUpgrade.addJListDevice(d);
+//                            MyLocalDevice.updateRemoteDevice(d);
+//
+//                        }
+//                    } else {
+//                        if (Public.matchString(Public.readModelName(d), reg)) {
+//                            isFound = true;
+//                            mUpgrade.addJListDevice(d);
+//                            MyLocalDevice.updateRemoteDevice(d);
+////                            System.out.println("match: "+isFound);
+//                            //mUpdateView.showUpgradeInformation(" ----------------send to jList");
+//                        }
+//                    }
                 } catch (BACnetException e) {
                     e.printStackTrace();
                 }
             } else if (mUpgrade.getFlag() == 1 || mUpgrade.getFlag() == 2) {
                 String reg = Public.getAllString(mUpgrade.getFirmWareType(), "[A-za-z0-9-/]");
 //                    mUpdateView.showUpgradeInformation(reg);
-                if (Public.matchString(reg, "^WS-")) {
-                    wallSwitch(reg);
-                } else {
-                    other(reg);
+                String[] split = mUpgrade.getFirmWareModelName().split(",");
+                boolean match = false;
+                for (int i = 0; i < split.length; i++) {
+                    if (Public.matchString(Public.readModelName(d), split[i])) {
+                        match = true;
+                        break;
+                    }
                 }
+                if (match) {
+                    isFound = true;
+                    mUpgrade.addJListDevice(d);
+                }
+//                if (Public.matchString(reg, "^WS-")) {
+//                    wallSwitch(reg);
+//                } else {
+//                    other(reg);
+//                }
             }
 
             //判断原始数据阶段是否找全所有设备

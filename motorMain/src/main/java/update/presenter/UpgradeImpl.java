@@ -18,6 +18,7 @@ import common.Common;
 import listener.UpgradeListener;
 import model.Conf;
 import model.FirmWareInformation;
+import model.FirmWareResult;
 import update.view.UpdateView;
 import util.Draper;
 import util.GsonUtils;
@@ -112,11 +113,12 @@ public class UpgradeImpl implements IUpgrade {
     private UpgradeListener upgradeRemoteListener;
     private int masterPercent;
     private int slavePercent;
-    private UpdateView updateView;
+    private UpdateView mUpdateView;
+    Conf conf=null;
 
 
     public UpgradeImpl(UpdateView updateView) {
-        this.updateView=updateView;
+        this.mUpdateView=updateView;
     }
 
     public void getUpgradeCallbackShowPercent() {
@@ -137,7 +139,7 @@ public class UpgradeImpl implements IUpgrade {
 
     private void showProgress(int masterProgress,int slaveProgress){
         System.out.println("masterProgress: "+masterProgress+" slaveProgress: "+slaveProgress);
-        updateView.onProgressChanged(masterProgress,slaveProgress);
+        mUpdateView.onProgressChanged(masterProgress,slaveProgress);
     }
 
     public void getUpgradeCallbackShowLog(String masterInfo,String slaveInfo) {
@@ -151,8 +153,10 @@ public class UpgradeImpl implements IUpgrade {
     }
 
     @Override
-    public List<FirmWareInformation> chooseFirmware(String path) {
+    public FirmWareResult chooseFirmware(String path) {
+        FirmWareResult firmWareResult = new FirmWareResult();
         List<FirmWareInformation> firmWareInformationList = new ArrayList<>();
+        List<ZipEntry> fileList=new ArrayList<>();
         File file = new File(path);
         try {
             ZipInputStream zis = new ZipInputStream(new FileInputStream(file));
@@ -160,72 +164,106 @@ public class UpgradeImpl implements IUpgrade {
             ZipEntry zipEn = null;
             while ((zipEn = zis.getNextEntry()) != null) {
                 if (!zipEn.isDirectory()) {
-                    byte[] tmpZipEn = new byte[(int) zipEn.getSize()];
-                    BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(zipEn));
-                    bis.read(tmpZipEn);
-                    String s = new String(tmpZipEn);
+
                     if(zipEn.getName().equals("conf.ini")){
-                        Conf conf = GsonUtils.parseJSON(s, Conf.class);
-                        String modelName = conf.getModelName();
+                        byte[] tmpZipEn = new byte[(int) zipEn.getSize()];
+                        BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(zipEn));
+                        bis.read(tmpZipEn);
+                        String s = new String(tmpZipEn);
+                        conf = GsonUtils.parseJSON(s, Conf.class);
+                        bis.close();
                     }else {
-                        boolean right = false;
-                        String name = Public.matchStr(s, "--\\{DARPER\\sFIREWARE\\}--");
-//            String type = getString(s, "\\[[a-zA-Z]{2}-[a-zA-Z]{2}-[0-9]{2}\\]");
-                        String type = Public.matchStr(s, "--\\[[A-Za-z0-9-/]*\\]--");
-                        type = type.substring(3, type.length() - 3);
-                        String version = Public.matchStr(s, "--\\*v[0-9]+.[0-9]+.[0-9]+\\*--");
-                        version = version.substring(4, version.length() - 3);
-                        String[] split = version.split("\\.");
-                        if ("--{DARPER FIREWARE}--".equals(name) && !"".equals(type) && !"".equals(version)) {
-                            right = true;
-                        }
+                        fileList.add(zipEn);
+//                        boolean right = false;
+//                        String name = Public.matchStr(s, "--\\{DARPER\\sFIREWARE\\}--");
+////            String type = getString(s, "\\[[a-zA-Z]{2}-[a-zA-Z]{2}-[0-9]{2}\\]");
+//                        String type = Public.matchStr(s, "--\\[[A-Za-z0-9-/]*\\]--");
+//                        type = type.substring(3, type.length() - 3);
+//                        String version = Public.matchStr(s, "--\\*v[0-9]+.[0-9]+.[0-9]+\\*--");
+//                        version = version.substring(4, version.length() - 3);
+//                        String[] split = version.split("\\.");
+//                        if ("--{DARPER FIREWARE}--".equals(name) && !"".equals(type) && !"".equals(version)) {
+//                            right = true;
+//                        }
+//
+//                        if (right) {
+//                            FirmWareInformation firmWareInformation = new FirmWareInformation();
+//                            firmWareInformation.setType(type);
+//                            firmWareInformation.setMajorNum(Integer.valueOf(split[0]));
+//                            firmWareInformation.setMinorNum(Integer.valueOf(split[1]));
+//                            firmWareInformation.setPatchNum(Integer.valueOf(split[2]));
+//                            byte[] tmp = new byte[8];
+//                            System.arraycopy(tmpZipEn, 0, tmp, 0, 8);
+//                            int startAddress = (int) (tmp[6] & 0xff) * 256 + (int) (tmp[5] & 0xff);
+//                            if (Public.matchString(type, "EC-AC-04")) {
+//                                if (startAddress < 0x4100) {
+//                                    firmWareInformation.setTypeNum(0);
+//                                } else if (startAddress < 0x4400) {
+//                                    firmWareInformation.setTypeNum(1);
+//                                } else {
+//                                    firmWareInformation.setTypeNum(2);
+//                                }
+//                            } else {
+//                                if (startAddress < 0x0080) {
+//                                    firmWareInformation.setTypeNum(0);
+//                                } else if (startAddress < 0x0240) {
+//                                    firmWareInformation.setTypeNum(1);
+//                                } else {
+//                                    firmWareInformation.setTypeNum(2);
+//                                }
+//                            }
+//                            if (firmWareInformation.getTypeNum() == 1) {
+//                                mFileTmp1 = tmpZipEn;
+//                                mFirmWareInformation1 = firmWareInformation;
+//                                firmWareInformationList.add(firmWareInformation);
+//                            } else if (firmWareInformation.getTypeNum() == 2) {
+//                                mFileTmp2 = tmpZipEn;
+//                                mFirmWareInformation2 = firmWareInformation;
+//                                firmWareInformationList.add(firmWareInformation);
+//                            }
 
-                        if (right) {
-                            FirmWareInformation firmWareInformation = new FirmWareInformation();
-                            firmWareInformation.setType(type);
-                            firmWareInformation.setMajorNum(Integer.valueOf(split[0]));
-                            firmWareInformation.setMinorNum(Integer.valueOf(split[1]));
-                            firmWareInformation.setPatchNum(Integer.valueOf(split[2]));
-                            byte[] tmp = new byte[8];
-                            System.arraycopy(tmpZipEn, 0, tmp, 0, 8);
-                            int startAddress = (int) (tmp[6] & 0xff) * 256 + (int) (tmp[5] & 0xff);
-                            if (Public.matchString(type, "EC-AC-04")) {
-                                if (startAddress < 0x4100) {
-                                    firmWareInformation.setTypeNum(0);
-                                } else if (startAddress < 0x4400) {
-                                    firmWareInformation.setTypeNum(1);
-                                } else {
-                                    firmWareInformation.setTypeNum(2);
-                                }
-                            } else {
-                                if (startAddress < 0x0080) {
-                                    firmWareInformation.setTypeNum(0);
-                                } else if (startAddress < 0x0240) {
-                                    firmWareInformation.setTypeNum(1);
-                                } else {
-                                    firmWareInformation.setTypeNum(2);
-                                }
-                            }
-                            if (firmWareInformation.getTypeNum() == 1) {
-                                mFileTmp1 = tmpZipEn;
-                                mFirmWareInformation1 = firmWareInformation;
-                                firmWareInformationList.add(firmWareInformation);
-                            } else if (firmWareInformation.getTypeNum() == 2) {
-                                mFileTmp2 = tmpZipEn;
-                                mFirmWareInformation2 = firmWareInformation;
-                                firmWareInformationList.add(firmWareInformation);
-                            }
-
-                        }
+//                        }
                     }
                 }
             }
+            for (ZipEntry zipEntry:fileList){
+                if(!zipEntry.isDirectory()){
+                    byte[] tmpZipEn = new byte[(int) zipEntry.getSize()];
+                    BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(zipEntry));
+                    bis.read(tmpZipEn);
+                    int crc = Public.crcCalcData(tmpZipEn);
+                    if(Public.matchString(zipEntry.getName(),"(#1)")){
+                        mFileTmp1 = tmpZipEn;
+                        FirmWareInformation firmWareInformation1 = conf.getFirmWareInformation1();
+                        if(crc!=firmWareInformation1.getCrc()){
+                            firmWareResult.setCode(-1);
+                            firmWareResult.setMessage(firmWareResult.getMessage()+" firmware (A) corrupt");
+                            continue;
+                        }
+                        mFirmWareInformation1 = firmWareInformation1;
+                        firmWareInformationList.add(conf.getFirmWareInformation1());
+                    }else if(Public.matchString(zipEntry.getName(),"(#2)")){
+                        mFileTmp2 = tmpZipEn;
+                        FirmWareInformation firmWareInformation2 = conf.getFirmWareInformation2();
+                        if(crc!=firmWareInformation2.getCrc()){
+                            firmWareResult.setCode(-1);
+                            firmWareResult.setMessage(firmWareResult.getMessage()+" firmware (B) corrupt");
+                            continue;
+                        }
+                        mFirmWareInformation2 = firmWareInformation2;
+                        firmWareInformationList.add(conf.getFirmWareInformation2());
+                    }
+                    bis.close();
+                }
+            }
+            zis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return firmWareInformationList;
+        firmWareResult.setFirmWareInformationList(firmWareInformationList);
+        return firmWareResult;
     }
 
     @Override
@@ -589,6 +627,11 @@ public class UpgradeImpl implements IUpgrade {
     }
 
     @Override
+    public String getFirmWareModelName() {
+        return conf.getModelName();
+    }
+
+    @Override
     public void addJListDevice(RemoteDevice device) {
         if (flag == 1) {
             addJListDeviceOrigin(device);
@@ -607,10 +650,10 @@ public class UpgradeImpl implements IUpgrade {
 //            findOriginDevice(Common.DEVICE_FOUND_ALL);
 //        } else {
         mOriginRemoteDevice.add(device);
-//        String version = Public.readVersion(device);
+        String version = Public.readVersion(device);
 //        Boolean aBoolean = Public.matchString(version, "(A)");
 //            mUpdateView.showUpgradeInformation("found device：" + device.getInstanceNumber() + "    " + count + "/" + MyLocalDevice.getAddressList().size());
-//            mUpdateView.showOriginalDeviceVersion(device.getInstanceNumber() + "--" + version);
+        mUpdateView.showOriginalDeviceVersion(device.getInstanceNumber() + "--" + version);
 //        }
     }
 
@@ -638,7 +681,7 @@ public class UpgradeImpl implements IUpgrade {
 //            mUpdateView.showBeforeDeviceVersion(device.getInstanceNumber() + "--" + version);
 //        } else {
 //            mUpdateView.showUpgradeInformation("found device：" + device.getInstanceNumber() + "    " + count + "/" + mUpdateView.getOriginalSize());
-//            mUpdateView.showBeforeDeviceVersion(device.getInstanceNumber() + "--" + version);
+            mUpdateView.showBeforeDeviceVersion(device.getInstanceNumber() + "--" + version);
 //        }
     }
 
@@ -649,10 +692,10 @@ public class UpgradeImpl implements IUpgrade {
 //            mUpdateView.showAfterDeviceVersion(device.getInstanceNumber() + "--" + version);
 //        } else {
         mAfterRemoteDevice.add(device);
-//        String version = Public.readVersion(device);
+        String version = Public.readVersion(device);
 
 //            mUpdateView.showUpgradeInformation("found device：" + device.getInstanceNumber() + "    " + count + "/" + mUpdateView.getOriginalSize());
-//            mUpdateView.showAfterDeviceVersion(device.getInstanceNumber() + "--" + version);
+            mUpdateView.showAfterDeviceVersion(device.getInstanceNumber() + "--" + version);
 //        }
     }
 

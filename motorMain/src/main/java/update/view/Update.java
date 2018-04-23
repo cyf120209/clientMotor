@@ -3,6 +3,7 @@ package update.view;
 import com.serotonin.bacnet4j.RemoteDevice;
 import common.Common;
 import model.FirmWareInformation;
+import model.FirmWareResult;
 import update.presenter.BinFileFilter;
 import update.presenter.UpgradeImpl;
 import util.*;
@@ -498,11 +499,15 @@ public class Update extends JFrame implements UpdateView, ActionListener {
         if (JFileChooser.APPROVE_OPTION == returnVal) {
             try {
                 String path = fDialog.getSelectedFile().getCanonicalPath();
-                List<FirmWareInformation> firmWareInformationList = mUpgradePresenter.chooseFirmware(path);
+                FirmWareResult firmWareResult = mUpgradePresenter.chooseFirmware(path);
                 loclFile.setText(path);
+                if(firmWareResult.getCode()==-1){
+                    showError("firmware corrupt!");
+                    showUpgradeInformation(firmWareResult.getMessage());
+                }
             } catch (IOException e1) {
                 e1.printStackTrace();
-                showError("file corrupt!");
+                showError("firmware corrupt!");
             }
 //            framefile1 = fDialog.getSelectedFile();
 //            ReadFileTobuff(framefile1);
