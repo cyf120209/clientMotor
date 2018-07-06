@@ -147,7 +147,7 @@ public class BoxLayoutCasePresenterImpl implements BoxLayoutCasePresenter {
     @Override
     public void cmdTestbt() {
         try {
-            Draper.sendCmd( Integer.parseInt(mBoxLayoutView.getCmdTextEdit()));
+            Draper.sendCmd( Integer.parseInt(mBoxLayoutView.getCmdTextEdit()),10);
         } catch (Exception e1) {
             e1.printStackTrace();
         }
@@ -157,7 +157,7 @@ public class BoxLayoutCasePresenterImpl implements BoxLayoutCasePresenter {
     @Override
     public void cmdTestOneBT() {
         try {
-            Draper.sendCmd( mBoxLayoutView.getdevBoxSelectedItem().getAddress(), Integer.parseInt(mBoxLayoutView.getCmdTextEdit()));
+            Draper.sendCmd( mBoxLayoutView.getdevBoxSelectedItem().getAddress(), Integer.parseInt(mBoxLayoutView.getCmdTextEdit()),10);
         } catch (Exception e1) {
             e1.printStackTrace();
         }

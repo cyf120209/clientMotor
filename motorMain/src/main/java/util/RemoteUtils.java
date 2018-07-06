@@ -55,6 +55,9 @@ public class RemoteUtils {
      * @param remoteDevice
      */
     public synchronized void addRemoteDevice(RemoteDevice remoteDevice){
+        if(isExist(remoteDevice)){
+            return;
+        }
         String modelName = Public.readModelName(remoteDevice);
         remoteDevice.setModelName(modelName);
         mRemoteDeviceIDList.add(remoteDevice.getInstanceNumber());
@@ -82,12 +85,13 @@ public class RemoteUtils {
         mRemoteDevice.clear();
     }
 
-    public Map<Integer, Map<Integer, List<Integer>>> getMap() {
+    public Map<Integer, Map<Integer, List<Integer>>> getRelationMap() {
         return mMap;
     }
 
-    public void setMap(Map<Integer, Map<Integer, List<Integer>>> map) {
-        mMap = map;
+    public synchronized void setRelationMap(Map<Integer, Map<Integer, List<Integer>>> map) {
+        mMap.clear();
+        mMap.putAll(map);
     }
 
     /**

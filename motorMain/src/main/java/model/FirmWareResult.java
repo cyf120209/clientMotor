@@ -1,9 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FirmWareResult {
+public class FirmWareResult implements Serializable{
 
     private int code;
 

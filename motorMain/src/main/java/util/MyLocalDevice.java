@@ -73,6 +73,7 @@ public class MyLocalDevice {
 //                    transport.setSegTimeout(15000);
                     localDevice = new LocalDevice(900, 900900, transport);
                     mRemoteUtils = new RemoteUtils();
+                    Draper.setDev(localDevice);
                     init();
                 }
             }

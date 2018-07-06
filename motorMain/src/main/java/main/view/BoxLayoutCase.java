@@ -7,7 +7,10 @@ import limitsAndStops.view.LimitsAndStops;
 import main.presenter.BoxLayoutCasePresenter;
 import main.presenter.BoxLayoutCasePresenterImpl;
 import show.ShowAllDevice;
+import showdraperInformation.view.AllDrapersInformation;
+import suntracking.view.SuntrackingView;
 import update.view.Update;
+import updownstop.view.UpDownStop;
 import util.ComPortutils;
 
 import javax.swing.*;
@@ -31,6 +34,7 @@ public class BoxLayoutCase extends JFrame implements ActionListener,BoxLayoutVie
     public JButton groupOperation=new JButton("groupOperation");
     public JButton update=new JButton("update");
     public JButton showAllDevice=new JButton("showAllDevice");
+    public JButton suntracking=new JButton("suntracking");
 
     public JComboBox comBox=new JComboBox();
     public JButton upComBox=new JButton("update port");
@@ -49,6 +53,12 @@ public class BoxLayoutCase extends JFrame implements ActionListener,BoxLayoutVie
     public JButton cmdTestOneBT=new JButton("SendCmd");
 
     public JButton limitsSetting=new JButton("LimitsSetting");
+
+    public JButton showInformation=new JButton("显示限位信息");
+    public JButton updownstop=new JButton("上下停测试");
+
+    public JLabel jlmotor=new JLabel("电机总数： ");
+    public JLabel jlmotorNum=new JLabel("0");
 
     public BoxLayoutCase() throws HeadlessException {
         mBoxLayoutCasePresenter = new BoxLayoutCasePresenterImpl(this);
@@ -82,6 +92,7 @@ public class BoxLayoutCase extends JFrame implements ActionListener,BoxLayoutVie
         groupOperation.setBounds(new Rectangle(100,10,150,Common.HEIGHT));
         update.setBounds(new Rectangle(250,10,100,Common.HEIGHT));
         showAllDevice.setBounds(new Rectangle(350,10,120,Common.HEIGHT));
+        suntracking.setBounds(new Rectangle(470,10,120,Common.HEIGHT));
         comBox.setBounds(10,35,150, Common.HEIGHT);
         upComBox.setBounds(170,35,100,Common.HEIGHT);
 
@@ -99,6 +110,11 @@ public class BoxLayoutCase extends JFrame implements ActionListener,BoxLayoutVie
         cmdTestOneBT.setBounds(250,200,100,Common.HEIGHT);
         cmdTextEdit.setBounds(10,200,100,Common.HEIGHT);
         limitsSetting.setBounds(200,250,150,Common.HEIGHT);
+        showInformation.setBounds(400,250,150,Common.HEIGHT);
+        updownstop.setBounds(550,250,150,Common.HEIGHT);
+
+        jlmotor.setBounds(480, 100, 80, Common.HEIGHT);
+        jlmotorNum.setBounds(560,100,100, Common.HEIGHT);
 
 //        Container con=getContentPane();
 //        Box horBox1 = Box.createHorizontalBox();
@@ -114,6 +130,7 @@ public class BoxLayoutCase extends JFrame implements ActionListener,BoxLayoutVie
         add(groupOperation);
         add(update);
         add(showAllDevice);
+        add(suntracking);
 
         add(upBt);
         add(downbt);
@@ -131,12 +148,18 @@ public class BoxLayoutCase extends JFrame implements ActionListener,BoxLayoutVie
         add(cmdTestOneBT);
 
         add(limitsSetting);
+        add(showInformation);
+        add(updownstop);
+
+        add(jlmotor);
+        add(jlmotorNum);
 
         setLocationRelativeTo(this);
         setVisible(true);
         startstopbt.addActionListener(this);
         upComBox.addActionListener(this);
         showAllDevice.addActionListener(this);
+        suntracking.addActionListener(this);
 
         upBt.addActionListener(this);
         stopButton.addActionListener(this);
@@ -147,6 +170,9 @@ public class BoxLayoutCase extends JFrame implements ActionListener,BoxLayoutVie
         limitsSetting.addActionListener(this);
         groupOperation.addActionListener(this);
         update.addActionListener(this);
+
+        showInformation.addActionListener(this);
+        updownstop.addActionListener(this);
 
         addWindowListener(new MyWindowEventHandle());
         listPort();
@@ -189,12 +215,25 @@ public class BoxLayoutCase extends JFrame implements ActionListener,BoxLayoutVie
             ShowAllDevice showAllDevice = new ShowAllDevice();
             showAllDevice.setLocationRelativeTo(null);
             showAllDevice.setVisible(true);
+        } else if(suntracking.equals(e.getSource())){
+            SuntrackingView suntrackingView = new SuntrackingView();
+            suntrackingView.setLocationRelativeTo(null);
+            suntrackingView.setVisible(true);
+        } else if(updownstop.equals(e.getSource())){
+            UpDownStop upDownStop = new UpDownStop();
+            upDownStop.setLocationRelativeTo(null);
+            upDownStop.setVisible(true);
+        }else if(showInformation.equals(e.getSource())){
+            AllDrapersInformation allDrapersInformation = new AllDrapersInformation();
+            allDrapersInformation.setLocationRelativeTo(null);
+            allDrapersInformation.setVisible(true);
         }
     }
 
     @Override
     public void AddItem(RemoteDevice d) {
         devBox.addItem(d);
+        jlmotorNum.setText(""+devBox.getItemCount());
     }
 
     @Override

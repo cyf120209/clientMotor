@@ -403,6 +403,11 @@ public class UpgradeImpl implements IUpgrade {
 //                mUpdateView.showUpgradeInformation("exit！");
                     return;
                 }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 System.out.println("step 2 start");
                 updateStep2();
                 getUpgradeCallbackShowPercent(30);
@@ -410,6 +415,11 @@ public class UpgradeImpl implements IUpgrade {
                 if (originDeviceFlag == Common.DEVICE_UPDATE_EXIT) {
 //                mUpdateView.showUpgradeInformation("exit！");
                     return;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
                 System.out.println("step 3 start");
                 updateStep3();
