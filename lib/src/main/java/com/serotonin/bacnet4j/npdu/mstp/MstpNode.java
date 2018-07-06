@@ -648,7 +648,6 @@ abstract public class MstpNode implements Runnable {
         if(!addressList.contains(sourceAddress)){
             addressList.add(sourceAddress);
             addressMap.put(sourceAddress,1);
-            System.out.println("----------------------"+sourceAddress);
         }else {
             Integer integer = addressMap.get(sourceAddress);
             addressMap.put(sourceAddress,(integer==null)?0:integer+1);
@@ -671,7 +670,7 @@ abstract public class MstpNode implements Runnable {
                     addressList.clear();
                     addressList.addAll(cacheList);
                     addressMap.clear();
-                    System.out.println("////////////////////////////////////////////////"+addressList.size());
+//                    System.out.println("////////////////////////////////////////////////"+addressList.size());
                 }
             });
             timer.start();

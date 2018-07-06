@@ -17,7 +17,9 @@ import java.util.List;
 public class MstpNetwork extends Network {
     private final MstpNode node;
 
-    public static int routeCount=0;
+    public static int routeCount = 0;
+
+    ReceivedFrameListener receivedFrameListener = null;
 
     public MstpNetwork(MstpNode node) {
         this(node, 0);
@@ -107,7 +109,13 @@ public class MstpNetwork extends Network {
     // Incoming frames
     //
     void receivedFrame(Frame frame) {
-        new IncomingFrameHandler(this, frame).run();
+        byte sourceAddress = frame.getSourceAddress();
+        byte destinationAddress = frame.getDestinationAddress();
+        FrameType frameType = frame.getFrameType();
+//        System.out.println("sourceAddress:"+sourceAddress+" destinationAddress:"+destinationAddress+" frameType:"+frameType);
+//        if (destinationAddress==6) {
+            new IncomingFrameHandler(this, frame).run();
+//        }
     }
 
     class IncomingFrameHandler extends IncomingRequestParser {
@@ -120,12 +128,17 @@ public class MstpNetwork extends Network {
             // no op. The frame has already been parsed.
         }
     }
+
     //
     //
     // Convenience methods
     //
     public Address getAddress(byte station) {
         return new Address(getLocalNetworkNumber(), station);
+    }
+
+    public void setReceivedFrameListener(ReceivedFrameListener receivedFrameListener) {
+        this.receivedFrameListener = receivedFrameListener;
     }
 
     @Override
